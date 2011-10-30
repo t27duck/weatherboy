@@ -1,0 +1,133 @@
+== Weatherboy
+
+Weatherboy is an easy-to-use gem that interfaces with the wunderground.com weather XML feeds.
+You are responsible for following Weather Underground's Terms of Service when using thier data feeds.
+
+TOS: http://wiki.wunderground.com/index.php/API_-_XML#API_Terms_Of_Service
+
+All classes in Wetherboy are wrapped inside the Weatherboy namespace. The class you directly interface with is the Core class. All other classes in the gem hold individual bits of weather info (current conditions, alerts, etc) that the Core class invokes.
+
+== Setup
+Require the gem like you would any other gem. 
+
+Then somewhere in your code, create a new Weatherboy object. The initilize method can take an area code, airport code, localweather station code, a city/state combo, or no arguments. Passing a location into the initilize method sets the location attribute used for all API calls.
+
+  weatherboy = Weatherboy.new(90210)
+  weatherboy = Weatherboy.new("Indianapolis, IN")
+  weatherboy = Weatherboy.new
+
+You can set/change the location at any time via the location attribute of the object.
+
+  weatherboy.location = "New York, NY"
+  weatherboy.location = 46220
+  weatherboy.location
+  => 46220
+
+The location attribute must be set before you can use any API calls.
+
+== Retrieving Weather Information 
+Now that you've created a Weatherboy instance and set a location for it, you're ready to get some weather information.
+
+=== current
+The current method retrieves the current weather information in the form of a Weatherboy::Current object.
+
+  w = weatherboy.current
+  => #<Weatherboy::Current:0x8c3dfe0...
+  w.weather
+  => "Overcast"
+  w.temp_f
+  => "31"
+
+=== Attributes of the Weatherboy::Current class
+* icon (URL)
+* weather
+* temp_f
+* temp_c
+* relative_humidity
+* wind_dir
+* wind_mph
+* pressure_mb
+* pressure_in
+* dewpoint_f
+* dewpoint_c
+* heat_index_f
+* heat_index_c
+* windchill_f
+* windchill_c
+* windchill_c
+* visibility_mi
+* visibility_km
+
+
+=== forecasts
+The get_forecasts method retrieves future weather predictions in the form of an array of Weatherboy::Forecast objects.
+
+  f = weatherboy.forecasts
+  => [#<Weatherboy::Forecast:0x8c3dfe0...]
+  f[0].high_f
+  => "43"
+  f[0].conditions
+  => "Mostly Cloudy"
+
+=== Attributes of the Weatherboy::Current class
+* high_f
+* high_c
+* low_f
+* low_c
+* conditions
+* icon (URL)
+* pop (Possibility of Precipitation)
+* title (This Afternoon, Tonight, Monday, etc)
+* text (Full text of forecast)
+
+
+=== alerts ===
+The alerts method retrieves severe weather alerts and special weather statements in the form of an array of Weatherboy::Alert objects.
+
+  a = weatherboy.alerts
+  => true
+  a.size
+  => 1
+  a[0].date
+  => "3:40 am PST on January 15, 2008"
+  a[0].description
+  => "Lake Wind Advisory"
+
+=== Attributes of the Weatherboy::Alert class
+* description
+* date (Just the string returned from the XML. Not a date object)
+* message (Usually a HUGE wall of text)
+
+
+=== media
+The media method retrieves local weather webcams of the location and stores them in a hash containing Weatherboy::Webcam objects and a Weatherboy::Radar object.
+get_media returns true on a successful result.
+
+  m = weatherboy.media
+  => true
+  m[:radar].image_url
+  => "http://www.wunderground.com/radar/radblast.asp?ID=IND&region=b4&lat=39.89311981&lon=-86.18370819" 
+  m[:webcams][2].image_url
+  => "http://icons.wunderground.com/webcamramdisk/v/e/VeedersburgBear/1/current.jpg?t=1298845906" 
+
+=== Attributes of the Weatherboy::Radar class
+* image_url
+* url
+
+=== Attributes of the Weatherboy::Webcam class
+* handle
+* camid
+* assoc_station_id
+* link
+* link_text
+* organization
+* cameratype
+* neighborhood
+* zip
+* city
+* state
+* country
+* updated
+* image_url
+* widget_url
+* cam_url
