@@ -5,8 +5,6 @@ You are responsible for following Weather Underground's Terms of Service when us
 
 TOS: http://wiki.wunderground.com/index.php/API_-_XML#API_Terms_Of_Service
 
-All classes in Wetherboy are wrapped inside the Weatherboy namespace. The class you directly interface with is the Core class. All other classes in the gem hold individual bits of weather info (current conditions, alerts, etc) that the Core class invokes.
-
 == Setup
 Require the gem like you would any other gem. 
 
